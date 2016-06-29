@@ -1,0 +1,6 @@
+[Unit]
+Description=Create iptables chain based on the networks and devices in a Packet project
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c "/usr/bin/docker run --env-file=/home/core/pktables/env -v /var/lib/iptables:/data pktables"
