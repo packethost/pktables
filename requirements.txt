@@ -1,2 +1,2 @@
-packet-python>=1.025
+packet-python>=1.3
 netaddr
