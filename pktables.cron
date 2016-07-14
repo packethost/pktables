@@ -1,0 +1,1 @@
+0 5     * * *   root    cd /root/pktables && ./pktables.sh > /dev/null && cat /etc/iptables/pktables.rules | bash
