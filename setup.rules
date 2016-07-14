@@ -1,0 +1,20 @@
+# usage: bash setup.rules
+iptables -N LOGGING
+iptables -N PKTABLES
+
+read -p "Ensure pktables rules are in place before proceeding. Proceed? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: "
+	iptables -A LOGGING -j REJECT --reject-with icmp-port-unreachable
+	iptables -A INPUT -i lo -j ACCEPT
+	iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+	iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+	iptables -A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+	iptables -A INPUT -j PKTABLES
+	iptables -A INPUT -p tcp -j LOGGING
+	echo "rules applied."
+else
+	echo "aborting"
+fi
