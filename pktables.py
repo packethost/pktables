@@ -7,14 +7,15 @@ import time
 import packet
 from netaddr import IPNetwork, IPAddress
 
-if not "PACKETKEY" in os.environ:
-    raise RuntimeError("PACKETKEY variable not set")
 
-if not "PROJECTID" in os.environ:
-    raise RuntimeError("PROJECTID variable not set")
+PACKETKEY = os.environ.get("PACKET_API_AUTH_TOKEN", os.environ.get("PACKETKEY"))
+PROJECTID = os.environ.get("PACKET_PROJECT", os.environ.get("PROJECTID"))
+if PACKETKEY is None:
+    raise RuntimeError("PACKET_API_AUTH_TOKEN or PACKETKEY(deprecated) env var not set")
 
-PACKETKEY = os.environ.get("PACKETKEY")
-PROJECTID = os.environ.get("PROJECTID")
+if PROJECTID is None:
+    raise RuntimeError("PACKET_PROJECT_ID or PROJECTID(deprecated) env var not set")
+
 RULESFILE = os.environ.get("RULESFILE", "/data/pktables.rules")
 CHAIN = os.environ.get("CHAIN", "PKTABLES")
 
