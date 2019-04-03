@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import packet 
-import httplib, json
+import argparse
+import os
 import time
-import os, sys, argparse, collections
+
+import packet
 from netaddr import IPNetwork, IPAddress
 
 if not "PACKETKEY" in os.environ:
