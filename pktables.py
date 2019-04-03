@@ -33,13 +33,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    networks = {}
+    networks = []
     data = manager.call_api("projects/%s/ips" % PROJECTID)
     for block in data["ip_addresses"]:
         if not block["management"] and block["address_family"] == 4:
-            networks[block["network"]] = IPNetwork(
-                block["network"] + "/" + str(block["cidr"])
-            )
+            net = IPNetwork(block["network"] + "/" + str(block["cidr"]))
+            networks.append(net)
 
     perpage = 500
     alldevs = manager.list_devices(PROJECTID, {"per_page": perpage})
@@ -53,14 +52,14 @@ if __name__ == "__main__":
                 public = "Public" if ip["public"] else "Private"
                 print("checking %s" % ip["address"])
                 match = False
-                for k, network in networks.items():
+                for network in networks:
                     if IPAddress(ip["address"]) in network:
                         print("%s is in network %s" % (ip["address"], network.cidr))
                         match = True
                         break
 
                 if not match:
-                    devices[ip["address"]] = {
+                    devices[IPAddress(ip["address"])] = {
                         "address": ip["address"],
                         "hostname": device.hostname,
                         "public": public,
@@ -84,10 +83,10 @@ if __name__ == "__main__":
         )
         target.write("iptables -F %s\n" % CHAIN)
 
-        for k, network in sorted(networks.items()):
+        for network in sorted(networks):
             target.write("iptables -A %s -s %s  -j ACCEPT\n" % (CHAIN, network.cidr))
 
-        for k, v in sorted(devices.items()):
-            target.write(dev_format.format(chain=CHAIN, **v))
+        for ip in sorted(devices):
+            target.write(dev_format.format(chain=CHAIN, **devices[ip]))
 
         target.write("iptables -A %s -j RETURN\n" % CHAIN)
