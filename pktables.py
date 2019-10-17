@@ -14,7 +14,7 @@ if PACKETKEY is None:
     raise RuntimeError("PACKET_API_AUTH_TOKEN or PACKETKEY(deprecated) env var not set")
 
 if PROJECTID is None:
-    raise RuntimeError("PACKET_PROJECT_ID or PROJECTID(deprecated) env var not set")
+    raise RuntimeError("PACKET_PROJECT or PROJECTID(deprecated) env var not set")
 
 RULESFILE = os.environ.get("RULESFILE", "/data/pktables.rules")
 CHAIN = os.environ.get("CHAIN", "PKTABLES")
