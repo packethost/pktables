@@ -40,11 +40,7 @@ if __name__ == "__main__":
             net = IPNetwork(block["network"] + "/" + str(block["cidr"]))
             networks.append(net)
 
-    perpage = 500
-    alldevs = manager.list_devices(PROJECTID, {"per_page": perpage})
-    if perpage <= manager.meta["total"]:
-        raise RuntimeError("more devices than requested: %s" % manager.meta["total"])
-
+    alldevs = manager.list_all_devices(PROJECTID)
     devices = {}
     for device in alldevs:
         for ip in device.ip_addresses:
