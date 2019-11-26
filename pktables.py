@@ -9,7 +9,7 @@ from netaddr import IPNetwork, IPAddress
 
 
 PACKETKEY = os.environ.get("PACKET_API_AUTH_TOKEN", os.environ.get("PACKETKEY"))
-PROJECTID = os.environ.get("PACKET_PROJECT", os.environ.get("PROJECTID"))
+PROJECTID = os.environ.get("PACKET_PROJECT_ID", os.environ.get("PACKET_PROJECT", os.environ.get("PROJECTID")))
 if PACKETKEY is None:
     raise RuntimeError("PACKET_API_AUTH_TOKEN or PACKETKEY(deprecated) env var not set")
 
